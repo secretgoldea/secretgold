@@ -1,0 +1,916 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secret EA — Premium Automated Trading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --white: #ffffff;
+      --off-white: #f5f5f7;
+      --black: #1a1a1a;
+      --black-soft: #2c2c2e;
+      --gray-light: #e5e5ea;
+      --gray-mid: #8e8e93;
+      --gray-dark: #3a3a3c;
+      --gold: #d4af37;       /* minimal accent, just for subtle touches */
+      --gold-dim: rgba(212, 175, 55, 0.08);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
+      background: var(--white);
+      color: var(--black);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ===== UTILITY ===== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-padding {
+      padding: 100px 0;
+    }
+
+    .section-label {
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gray-mid);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 18px;
+      color: var(--gray-mid);
+      max-width: 560px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== HEADER / NAV ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      padding: 12px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.5px;
+      color: var(--black);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--gold);
+    }
+
+    .nav-lang {
+      display: flex;
+      gap: 6px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-mid);
+      padding: 4px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .lang-btn:hover,
+    .lang-btn.active {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding-top: 120px;
+      padding-bottom: 80px;
+      background: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(44px, 7vw, 76px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .hero-content h1 .highlight {
+      background: linear-gradient(135deg, var(--black) 40%, var(--gray-mid) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-content p {
+      font-size: 18px;
+      color: var(--gray-mid);
+      max-width: 420px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--black);
+      color: var(--white);
+      padding: 16px 40px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-cta:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+      background: #2c2c2e;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .stat-item {
+      text-align: left;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-mid);
+      font-weight: 400;
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-placeholder {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 400px;
+      background: var(--off-white);
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      border: 1px solid var(--gray-light);
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-placeholder .logo-mark {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--black);
+      margin-bottom: 20px;
+      border: 2px solid var(--black);
+      width: 88px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 24px;
+    }
+
+    .hero-placeholder h3 {
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-placeholder p {
+      color: var(--gray-mid);
+      font-size: 14px;
+    }
+
+    /* ===== FEATURES ===== */
+    .features {
+      background: var(--off-white);
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+      margin-top: 48px;
+    }
+
+    .feat-card {
+      background: var(--white);
+      padding: 32px 28px;
+      border-radius: 24px;
+      border: 1px solid var(--gray-light);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .feat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.08);
+      border-color: transparent;
+    }
+
+    .feat-title {
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+
+    .feat-desc {
+      color: var(--gray-mid);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ===== PROOF / RESULTS SLIDER ===== */
+    .proof-section {
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .proof-marquee {
+      margin-top: 48px;
+      position: relative;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    }
+
+    .proof-track {
+      display: flex;
+      gap: 24px;
+      width: max-content;
+      animation: proof-scroll 45s linear infinite;
+    }
+
+    .proof-marquee:hover .proof-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes proof-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .proof-card {
+      flex: 0 0 auto;
+      width: 250px;
+      background: var(--off-white);
+      border: 1px solid var(--gray-light);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.18);
+    }
+
+    .proof-card img {
+      display: block;
+      width: 100%;
+      height: 440px;
+      object-fit: cover;
+      object-position: top center;
+      background: var(--gray-light);
+    }
+
+    .proof-meta {
+      padding: 16px 18px 18px;
+    }
+
+    .proof-amount {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #1a7f37;
+    }
+
+    .proof-quote {
+      font-size: 13px;
+      color: var(--gray-mid);
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    .proof-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-dark);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .proof-card { width: 210px; }
+      .proof-card img { height: 380px; }
+    }
+
+    /* ===== BONUS / OFFER ===== */
+    .bonus-section {
+      background: var(--off-white);
+    }
+
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 48px;
+    }
+
+    .bonus-card {
+      background: var(--off-white);
+      border-radius: 28px;
+      padding: 40px 32px;
+      border: 1px solid var(--gray-light);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .bonus-card:hover {
+      background: var(--white);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.06);
+      border-color: transparent;
+    }
+
+    .bonus-badge {
+      display: inline-block;
+      background: var(--black);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .bonus-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .bonus-desc {
+      color: var(--gray-mid);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .bonus-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .bonus-list li {
+      font-size: 14px;
+      color: var(--gray-dark);
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bonus-list li::before {
+      content: "•";
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    /* ===== BOTTOM CTA ===== */
+    .cta-block {
+      background: var(--black);
+      color: var(--white);
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .cta-block .section-title {
+      color: var(--white);
+    }
+
+    .cta-block .section-sub {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .cta-block .hero-cta {
+      background: var(--white);
+      color: var(--black);
+      margin-top: 32px;
+    }
+
+    .cta-block .hero-cta:hover {
+      background: var(--off-white);
+      box-shadow: 0 12px 32px rgba(255, 255, 255, 0.1);
+    }
+
+    /* ===== DISCLAIMER ===== */
+    .disclaimer {
+      max-width: 640px;
+      margin: 40px auto 0;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+      line-height: 1.8;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 32px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--white);
+      padding: 40px 0;
+      border-top: 1px solid var(--gray-light);
+      text-align: center;
+      font-size: 14px;
+      color: var(--gray-mid);
+    }
+
+    .footer a {
+      color: var(--black);
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+      }
+
+      .hero-content p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-placeholder {
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .bonus-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .bonus-grid .bonus-card:last-child {
+        grid-column: 1 / -1;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .bonus-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bonus-grid .bonus-card:last-child {
+        grid-column: auto;
+        max-width: 100%;
+      }
+
+      .hero-stats {
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+
+      .stat-item {
+        flex: 1 0 40%;
+      }
+
+      .nav-inner {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .nav-lang {
+        margin-left: auto;
+      }
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .fade-up {
+      transition-delay: 0.05s;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">Secret<span>EA</span></a>
+      <div class="nav-lang">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" onclick="setLang('ar')">AR</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content fade-up">
+        <span class="section-label">Next‑Gen Trading</span>
+        <h1>
+          Trade <span class="highlight">Smarter</span><br />
+          with Proven Precision
+        </h1>
+        <p>
+          Fully automated Expert Advisor for MT4 &amp; MT5. Hedge strategy,
+          copy trading, and VIP signals — all in one place.
+        </p>
+        <a href="https://t.me/Secretgoldea_bot" target="_blank" class="hero-cta">
+          Join the Channel →
+        </a>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">MT4</div>
+            <div class="stat-label">Compatible</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">MT5</div>
+            <div class="stat-label">Compatible</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Automated</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual fade-up">
+        <div class="hero-placeholder">
+          <div class="logo-mark">SE</div>
+          <h3>Secret EA</h3>
+          <p>Automated · Consistent · Verified</p>
+          <div style="margin-top: 20px; font-size: 14px; color: var(--gray-mid);">+5,200 members</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features section-padding">
+    <div class="container">
+      <div class="text-center fade-up">
+        <span class="section-label">Why Secret EA</span>
+        <h2 class="section-title">Built for Performance</h2>
+        <p class="section-sub mx-auto">
+          Professional automation designed to execute trades with discipline and consistency.
+        </p>
+      </div>
+
+      <div class="feat-grid">
+        <div class="feat-card fade-up">
+          <h3 class="feat-title">100% Automated</h3>
+          <p class="feat-desc">The robot trades round the clock — no manual intervention needed.</p>
+        </div>
+        <div class="feat-card fade-up">
+          <h3 class="feat-title">Risk‑First Approach</h3>
+          <p class="feat-desc">Smart hedge strategy with adjustable risk profiles for any trader.</p>
+        </div>
+        <div class="feat-card fade-up">
+          <h3 class="feat-title">Verified Results</h3>
+          <p class="feat-desc">Performance tracked live on Myfxbook — complete transparency.</p>
+        </div>
+        <div class="feat-card fade-up">
+          <h3 class="feat-title">MT4 &amp; MT5 Ready</h3>
+          <p class="feat-desc">Works on the world’s most popular platforms. Easy 5‑minute setup.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROOF / RESULTS SLIDER ===== -->
+  <section class="proof-section section-padding">
+    <div class="container">
+      <div class="text-center fade-up">
+        <span class="section-label">Real Member Results</span>
+        <h2 class="section-title">Live Proof</h2>
+        <p class="section-sub mx-auto">
+          Real screenshots forwarded by members of our community. Results vary — trading always carries risk.
+        </p>
+      </div>
+    </div>
+
+    <div class="proof-marquee fade-up">
+      <div class="proof-track">
+        <!-- SET 1 -->
+        <div class="proof-card">
+          <img src="proofs/proof1.jpg" alt="Member result — +311 balance" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">Balance €311</div>
+            <p class="proof-quote">“Profit after 2 days — standard account with €50 + €50 broker bonus.”</p>
+            <div class="proof-name">Corinne</div>
+          </div>
+        </div>
+
+        <div class="proof-card">
+          <img src="proofs/proof2.jpg" alt="Member result — +284 profit" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">+$284</div>
+            <p class="proof-quote">“I set it up last night and the results came naturally. Really enjoying this EA!”</p>
+            <div class="proof-name">Alejandra Luz</div>
+          </div>
+        </div>
+
+        <div class="proof-card">
+          <img src="proofs/proof3.jpg" alt="Member result — 350 to 463 balance" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">$350 → $463</div>
+            <p class="proof-quote">“Bro, I put in 350 and look at the history 😱”</p>
+            <div class="proof-name">Hugo</div>
+          </div>
+        </div>
+
+        <div class="proof-card">
+          <img src="proofs/proof4.jpg" alt="Member result — 2525 balance" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">+$2,525</div>
+            <p class="proof-quote">“I checked the account after a while and I already have $2,525. Thank you, Secret!”</p>
+            <div class="proof-name">Safira</div>
+          </div>
+        </div>
+
+        <div class="proof-card">
+          <img src="proofs/proof5.jpg" alt="Member result — 11073 balance" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">+$11,073</div>
+            <p class="proof-quote">“Your EA has been helping me a lot ❤️ You're amazing, man!”</p>
+            <div class="proof-name">Jey</div>
+          </div>
+        </div>
+
+        <!-- SET 2 (duplicate for seamless loop) -->
+        <div class="proof-card" aria-hidden="true">
+          <img src="proofs/proof1.jpg" alt="" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">Balance €311</div>
+            <p class="proof-quote">“Profit after 2 days — standard account with €50 + €50 broker bonus.”</p>
+            <div class="proof-name">Corinne</div>
+          </div>
+        </div>
+
+        <div class="proof-card" aria-hidden="true">
+          <img src="proofs/proof2.jpg" alt="" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">+$284</div>
+            <p class="proof-quote">“I set it up last night and the results came naturally. Really enjoying this EA!”</p>
+            <div class="proof-name">Alejandra Luz</div>
+          </div>
+        </div>
+
+        <div class="proof-card" aria-hidden="true">
+          <img src="proofs/proof3.jpg" alt="" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">$350 → $463</div>
+            <p class="proof-quote">“Bro, I put in 350 and look at the history 😱”</p>
+            <div class="proof-name">Hugo</div>
+          </div>
+        </div>
+
+        <div class="proof-card" aria-hidden="true">
+          <img src="proofs/proof4.jpg" alt="" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">+$2,525</div>
+            <p class="proof-quote">“I checked the account after a while and I already have $2,525. Thank you, Secret!”</p>
+            <div class="proof-name">Safira</div>
+          </div>
+        </div>
+
+        <div class="proof-card" aria-hidden="true">
+          <img src="proofs/proof5.jpg" alt="" loading="lazy" />
+          <div class="proof-meta">
+            <div class="proof-amount">+$11,073</div>
+            <p class="proof-quote">“Your EA has been helping me a lot ❤️ You're amazing, man!”</p>
+            <div class="proof-name">Jey</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BONUSES ===== -->
+  <section class="bonus-section section-padding">
+    <div class="container">
+      <div class="text-center fade-up">
+        <span class="section-label">Included for Members</span>
+        <h2 class="section-title">Everything You Get</h2>
+        <p class="section-sub mx-auto">
+          Join the channel and unlock a full suite of trading tools and insights.
+        </p>
+      </div>
+
+      <div class="bonus-grid">
+        <!-- Card 1 -->
+        <div class="bonus-card fade-up">
+          <span class="bonus-badge">VIP</span>
+          <h3 class="bonus-title">Live Signals Room</h3>
+          <p class="bonus-desc">Real‑time entry alerts for XAU/USD and major pairs.</p>
+          <ul class="bonus-list">
+            <li>Clear entry, SL &amp; TP</li>
+            <li>Market context included</li>
+            <li>Delivered via Telegram</li>
+          </ul>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bonus-card fade-up">
+          <span class="bonus-badge">Auto</span>
+          <h3 class="bonus-title">Copy Trading</h3>
+          <p class="bonus-desc">Automatically replicate our professional trades.</p>
+          <ul class="bonus-list">
+            <li>Works with MT4 &amp; MT5</li>
+            <li>No technical knowledge required</li>
+            <li>Fully passive experience</li>
+          </ul>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bonus-card fade-up">
+          <span class="bonus-badge">Exclusive</span>
+          <h3 class="bonus-title">Full EA Access</h3>
+          <p class="bonus-desc">Get the complete Expert Advisor with all updates.</p>
+          <ul class="bonus-list">
+            <li>Ready‑to‑use presets</li>
+            <li>Lifetime updates</li>
+            <li>Direct team support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BOTTOM CTA (DARK) ===== -->
+  <section class="cta-block">
+    <div class="container">
+      <div class="fade-up">
+        <span class="section-label" style="color:rgba(255,255,255,0.3);">Get Started</span>
+        <h2 class="section-title">Ready to Automate?</h2>
+        <p class="section-sub mx-auto">
+          Join the community and start trading with Secret EA today.
+        </p>
+        <a href="https://t.me/Secretgoldea_bot" target="_blank" class="hero-cta">
+          Join Group Chat →
+        </a>
+        <div class="disclaimer">
+          Risk Warning: Trading forex and CFDs involves substantial risk of loss.
+          Past performance is not indicative of future results. Only trade with funds
+          you can afford to lose. This content is for educational purposes only.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>
+        &copy; 2026 Secret EA &nbsp;·&nbsp;
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="https://t.me/Secretgoldea_bot" target="_blank">Telegram</a>
+      </p>
+      <p style="margin-top: 8px; font-size: 12px; color: var(--gray-mid);">
+        Designed with precision — black &amp; white luxury.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Language switcher (placeholder) =====
+    function setLang(lang) {
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      console.log('Language set to:', lang);
+    }
+
+    // ===== Scroll reveal =====
+    document.addEventListener('DOMContentLoaded', function() {
+      const targets = document.querySelectorAll('.fade-up');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            // Add a small staggered delay for each element
+            const delay = index * 0.06;
+            entry.target.style.transitionDelay = delay + 's';
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+      targets.forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
+</html>
